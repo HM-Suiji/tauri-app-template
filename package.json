@@ -11,17 +11,23 @@
     "lint": "oxlint  --type-aware",
     "lint:fix": "oxlint  --type-aware --fix",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "db:generate": "drizzle-kit generate",
+    "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-dialog": "~2",
     "@tauri-apps/plugin-fs": "~2",
     "@tauri-apps/plugin-log": "~2",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-shell": "~2",
+    "@tauri-apps/plugin-sql": "~2",
     "@tauri-apps/plugin-store": "~2",
+    "drizzle-orm": "^0.45.1",
     "immer": "^11.1.4",
+    "nanoid": "^5.1.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "zustand": "^5.0.11"
@@ -35,6 +41,7 @@
     "@vitejs/plugin-react": "^4.6.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "code-inspector-plugin": "^1.4.2",
+    "drizzle-kit": "^0.31.9",
     "oxfmt": "^0.31.0",
     "oxlint": "^1.46.0",
     "oxlint-tsgolint": "^0.12.0",

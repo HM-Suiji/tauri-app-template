@@ -1,13 +1,25 @@
 import '@/assets/globals.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useCountStore } from '@/store/counter.store'
 import { commands } from '@/utils/bindings'
+
+import { getSettings, setSettings } from './db/actions/settings.action'
 
 function App() {
   const [greetMsg, setGreetMsg] = useState('')
   const [name, setName] = useState('')
   const { count, increment } = useCountStore()
+  const [settings, _setSettings] = useState<Record<string, string | null>>({})
+
+  useEffect(() => {
+    ;(async () => {
+      const _settings = await getSettings()
+      _settings.forEach(setting => {
+        _setSettings(prev => ({ ...prev, [setting.key]: setting.value }))
+      })
+    })()
+  }, [])
 
   async function greet() {
     setGreetMsg(await commands.greet(name))
@@ -36,6 +48,27 @@ function App() {
 
       <p>Count: {count}</p>
       <button onClick={() => increment(1)}>Increment</button>
+
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          const data = new FormData(e.currentTarget)
+          setSettings(data.get('key') as string, data.get('value') as string)
+        }}
+      >
+        <input name="key" />
+        <input name="value" />
+        <button type="submit">Add</button>
+      </form>
+
+      <div>
+        {Object.entries(settings).map(([key, value]) => (
+          <div key={key}>
+            <span>{key}: </span>
+            <span>{value}</span>
+          </div>
+        ))}
+      </div>
     </main>
   )
 }
