@@ -20,8 +20,11 @@
     "@tauri-apps/plugin-log": "~2",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-shell": "~2",
+    "@tauri-apps/plugin-store": "~2",
+    "immer": "^11.1.4",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -30,6 +33,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "babel-plugin-react-compiler": "^1.0.0",
     "code-inspector-plugin": "^1.4.2",
     "oxfmt": "^0.31.0",
     "oxlint": "^1.46.0",

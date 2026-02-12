@@ -1,5 +1,5 @@
 use specta_typescript::Typescript;
-use tauri_specta::{ collect_commands, Builder };
+use tauri_specta::{collect_commands, Builder};
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -17,8 +17,8 @@ pub fn run() {
         .export(Typescript::default(), "../src/utils/bindings.ts")
         .expect("Failed to export typescript bindings");
 
-    tauri::Builder
-        ::default()
+    tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         // and finally tell Tauri how to invoke them
         .invoke_handler(builder.invoke_handler())
         .setup(move |app| {
@@ -30,7 +30,9 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(
-            tauri_plugin_log::Builder::new().level(tauri_plugin_log::log::LevelFilter::Info).build()
+            tauri_plugin_log::Builder::new()
+                .level(tauri_plugin_log::log::LevelFilter::Info)
+                .build(),
         )
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())

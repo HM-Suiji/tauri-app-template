@@ -1,10 +1,13 @@
-import '@assets/globals.css'
-import { commands } from '@utils/bindings'
+import '@/assets/globals.css'
 import { useState } from 'react'
+
+import { useCountStore } from '@/store/counter.store'
+import { commands } from '@/utils/bindings'
 
 function App() {
   const [greetMsg, setGreetMsg] = useState('')
   const [name, setName] = useState('')
+  const { count, increment } = useCountStore()
 
   async function greet() {
     setGreetMsg(await commands.greet(name))
@@ -30,6 +33,9 @@ function App() {
         <button type="submit">Greet</button>
       </form>
       <p>{greetMsg}</p>
+
+      <p>Count: {count}</p>
+      <button onClick={() => increment(1)}>Increment</button>
     </main>
   )
 }
