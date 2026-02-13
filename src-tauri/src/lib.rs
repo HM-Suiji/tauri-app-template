@@ -14,7 +14,9 @@ fn greet(name: &str) -> String {
 pub fn run() {
     let tauri_builder = tauri::Builder::default();
 
-    let commands_builder = Builder::<tauri::Wry>::new().commands(collect_commands![greet]);
+    let commands_builder = Builder::<tauri::Wry>
+        ::new()
+        .commands(collect_commands![greet, drizzle_proxy::run_sql]);
     let migrations = load_migrations();
 
     #[cfg(debug_assertions)]
@@ -23,8 +25,9 @@ pub fn run() {
         .expect("Failed to export typescript bindings");
 
     #[allow(unused_mut)]
-    let mut log_plugin_builder =
-        tauri_plugin_log::Builder::new().level(tauri_plugin_log::log::LevelFilter::Info);
+    let mut log_plugin_builder = tauri_plugin_log::Builder
+        ::new()
+        .level(tauri_plugin_log::log::LevelFilter::Info);
 
     #[cfg(debug_assertions)]
     {
@@ -44,7 +47,6 @@ pub fn run() {
             commands_builder.mount_events(app);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![drizzle_proxy::run_sql])
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_fs::init())
@@ -54,7 +56,5 @@ pub fn run() {
     #[cfg(debug_assertions)]
     let tauri_builder = tauri_builder.plugin(tauri_plugin_devtools::init());
 
-    tauri_builder
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+    tauri_builder.run(tauri::generate_context!()).expect("error while running tauri application");
 }

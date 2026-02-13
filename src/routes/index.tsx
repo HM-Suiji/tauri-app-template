@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { invoke } from '@tauri-apps/api/core'
+import { useState } from 'react'
 
-import { getSettings, setSettings } from '@/db/actions/settings.action'
 import { useCounterStore } from '@/store/counter.store'
 import { commands } from '@/utils/bindings'
 
@@ -15,7 +15,7 @@ function App() {
   const { count, increment } = useCounterStore()
 
   async function greet() {
-    setGreetMsg(await commands.greet(name))
+    setGreetMsg(await invoke('greet', { name })) // invoke the greet command
   }
 
   return (
@@ -37,7 +37,7 @@ function App() {
         />
         <button type="submit">Greet</button>
       </form>
-      <p>{greetMsg}</p>
+      <div>{greetMsg}</div>
 
       <p>Count: {count}</p>
       <button onClick={() => increment(1)}>Increment</button>

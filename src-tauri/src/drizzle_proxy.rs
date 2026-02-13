@@ -2,6 +2,7 @@ use base64::engine::general_purpose;
 use base64::Engine;
 use serde::{ Deserialize, Serialize };
 use serde_json::Value;
+use specta::Type;
 use sqlx::{
     query::Query,
     sqlite::{ SqliteArguments, SqliteRow },
@@ -15,19 +16,20 @@ use std::path::PathBuf;
 use tauri::Manager;
 use tauri::AppHandle;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Type)]
 pub struct SqlQuery {
     pub sql: String,
     pub params: Vec<serde_json::Value>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Type)]
 pub struct SqlRow {
     pub columns: Vec<String>,
     pub values: Vec<serde_json::Value>,
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn run_sql(app: AppHandle, query: SqlQuery) -> Result<Vec<SqlRow>, String> {
     let db_path = get_app_db_path(&app)?;
     let uri = format!("sqlite://{}", db_path.display());
