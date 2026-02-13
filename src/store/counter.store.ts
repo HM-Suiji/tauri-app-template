@@ -13,7 +13,7 @@ type Actions = {
   decrement: (qty: number) => void
 }
 
-export const useCountStore = create<State & Actions>()(
+export const useCounterStore = create<State & Actions>()(
   persist(
     immer(set => ({
       count: 0,

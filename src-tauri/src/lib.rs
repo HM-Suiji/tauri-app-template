@@ -4,7 +4,6 @@ include!(concat!(env!("OUT_DIR"), "/generated_migrations.rs"));
 use specta_typescript::Typescript;
 use tauri_specta::{ collect_commands, Builder };
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 #[specta::specta]
 fn greet(name: &str) -> String {
@@ -13,16 +12,26 @@ fn greet(name: &str) -> String {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let builder = Builder::<tauri::Wry>::new().commands(collect_commands![greet]);
+    let tauri_builder = tauri::Builder::default();
+
+    let commands_builder = Builder::<tauri::Wry>::new().commands(collect_commands![greet]);
     let migrations = load_migrations();
 
     #[cfg(debug_assertions)]
-    builder
+    commands_builder
         .export(Typescript::default(), "../src/utils/bindings.ts")
         .expect("Failed to export typescript bindings");
 
-    tauri::Builder
-        ::default()
+    #[allow(unused_mut)]
+    let mut log_plugin_builder =
+        tauri_plugin_log::Builder::new().level(tauri_plugin_log::log::LevelFilter::Info);
+
+    #[cfg(debug_assertions)]
+    {
+        log_plugin_builder = log_plugin_builder.skip_logger();
+    }
+
+    let tauri_builder = tauri_builder
         .plugin(
             tauri_plugin_sql::Builder
                 ::default()
@@ -30,22 +39,22 @@ pub fn run() {
                 .build()
         )
         .plugin(tauri_plugin_store::Builder::new().build())
-        // and finally tell Tauri how to invoke them
-        .invoke_handler(builder.invoke_handler())
+        .invoke_handler(commands_builder.invoke_handler())
         .setup(move |app| {
-            // This is also required if you want to use events
-            builder.mount_events(app);
-
+            commands_builder.mount_events(app);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![drizzle_proxy::run_sql])
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
-        .plugin(
-            tauri_plugin_log::Builder::new().level(tauri_plugin_log::log::LevelFilter::Info).build()
-        )
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(log_plugin_builder.build());
+
+    #[cfg(debug_assertions)]
+    let tauri_builder = tauri_builder.plugin(tauri_plugin_devtools::init());
+
+    tauri_builder
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
