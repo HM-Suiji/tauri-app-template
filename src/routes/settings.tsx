@@ -1,3 +1,11 @@
+import {
+  Button,
+  FieldError,
+  Form,
+  Input,
+  Label,
+  TextField,
+} from '@heroui/react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useLayoutEffect } from 'react'
 
@@ -21,17 +29,26 @@ function RouteComponent() {
   return (
     <div>
       Hello "/settings"!
-      <form
+      <Form
+        className="flex items-center"
         onSubmit={e => {
           e.preventDefault()
           const data = new FormData(e.currentTarget)
           setSettings(data.get('key') as string, data.get('value') as string)
         }}
       >
-        <input name="key" />
-        <input name="value" />
-        <button type="submit">Add</button>
-      </form>
+        <TextField isRequired>
+          <Label>Key</Label>
+          <Input name="key" />
+          <FieldError />
+        </TextField>
+        <TextField isRequired>
+          <Label>Value</Label>
+          <Input name="value" />
+          <FieldError />
+        </TextField>
+        <Button type="submit">Add</Button>
+      </Form>
       <div>
         {Object.entries(settings).map(([key, value]) => (
           <div key={key}>

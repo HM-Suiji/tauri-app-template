@@ -7,6 +7,7 @@ export default defineConfig({
   rules: {
     'no-console': 'warn',
     'eslint/no-unused-vars': 'error',
+    'eslint/unused-imports': 'error',
     'react/prop-types': 'off',
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',

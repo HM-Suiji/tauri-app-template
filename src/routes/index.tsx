@@ -1,9 +1,9 @@
+import { Button, Form, Input } from '@heroui/react'
 import { createFileRoute } from '@tanstack/react-router'
 import { invoke } from '@tauri-apps/api/core'
 import { useState } from 'react'
 
 import { useCounterStore } from '@/store/counter.store'
-import { commands } from '@/utils/bindings'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -23,20 +23,19 @@ function App() {
       <h1>Welcome to Tauri + React</h1>
       <p>Click on the Tauri, Vite, and React logos to learn more.</p>
 
-      <form
-        className="row"
+      <Form
         onSubmit={e => {
           e.preventDefault()
           greet()
         }}
       >
-        <input
+        <Input
           id="greet-input"
           onChange={e => setName(e.currentTarget.value)}
           placeholder="Enter a name..."
         />
-        <button type="submit">Greet</button>
-      </form>
+        <Button type="submit">Greet</Button>
+      </Form>
       <div>{greetMsg}</div>
 
       <p>Count: {count}</p>

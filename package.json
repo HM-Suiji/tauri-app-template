@@ -16,6 +16,8 @@
     "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
+    "@heroui/react": "^3.0.0-beta.6",
+    "@heroui/styles": "^3.0.0-beta.6",
     "@libsql/client": "^0.17.0",
     "@tanstack/react-router": "^1.159.5",
     "@tauri-apps/api": "^2",
